@@ -4,10 +4,9 @@ import pathlib
 import shutil
 import tempfile
 
-import pytest
-
 import ansiblecall
 import ansiblecall.utils.loader
+import pytest
 
 IS_ROOT = os.getuid() == 0
 
