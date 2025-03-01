@@ -27,7 +27,7 @@ dependencies = [
 ]
 
 [project.scripts]
-pack = "ansiblepack:cli"
+ansible-pack = "ansiblepack.cli:cli"
 
 [project.urls]
 Documentation = "https://github.com/cheburakshu/ansible-pack#readme"
@@ -38,7 +38,7 @@ Source = "https://github.com/cheburakshu/ansible-pack"
 source = "vcs"
 
 [tool.hatch.build.hooks.vcs]
-version-file = "_version.py"
+version-file = "src/ansiblepack/_version.py"
 
 [tool.hatch.envs.test]
 dependencies = [
@@ -56,9 +56,6 @@ template = "test"
 extra-dependencies = [
   "ipykernel",
 ]
-
-[tool.hatch.envs.dev.scripts]
-pack = "ansiblepack:cli"
 
 [tool.coverage.run]
 source_pkgs = ["ansiblepack", "tests"]
