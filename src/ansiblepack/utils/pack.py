@@ -4,10 +4,12 @@ import importlib.metadata
 import json
 import logging
 import pathlib
+import shutil
 
 import ansiblecall
 import ansiblecall._version
 
+import ansiblepack
 import ansiblepack._version
 from ansiblepack.utils.process import Parallel
 
@@ -54,6 +56,14 @@ class Packer(Parallel):
         # Write a manifest.json file that contains the version, date created,
         # the input used for creation.
         cls.save_manifest(dest_dir=dest_dir)
+
+        # Copy salt modules
+        shutil.copytree(
+            src=pathlib.Path(ansiblepack.__file__).parent.joinpath("salt"),
+            dst=dest_dir,
+            dirs_exist_ok=True,
+            ignore=shutil.ignore_patterns("__pycache__", "*.pyc"),
+        )
 
     def run(self):
         """
