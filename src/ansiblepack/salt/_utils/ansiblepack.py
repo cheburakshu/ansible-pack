@@ -8,7 +8,7 @@ class ZipContext(ContextDecorator):
     def __init__(self, mod_name, params, path):
         super().__init__()
         self.mod_name = mod_name
-        self.params = params
+        self.params = params.copy()
         self.path = path
 
     def run(self):
