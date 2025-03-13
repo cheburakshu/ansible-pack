@@ -1,4 +1,8 @@
 # noqa: INP001
+
+__proxyenabled__ = ["ansiblepack"]
+
+
 def module(mod_name, saltenv="base", **params):
     path = __salt__["cp.cache_file"](f"salt://{mod_name}.zip", saltenv=saltenv)  # noqa: F821
     if not path:
