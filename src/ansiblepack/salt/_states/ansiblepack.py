@@ -38,23 +38,32 @@ def module(name, mod_name, params):
         "comment": "",
     }
 
-    # TODO: Run in check mode
-    # if __opts__["test"]:
-    #     Set check module flag for the ansible module.
+    if __opts__["test"]:  # noqa: F821
+        params["_ansible_check_mode"] = True
+
+    params["_ansible_diff"] = True
 
     mod_ret = __salt__["ansiblepack.module"](mod_name=mod_name, **params)  # noqa: F821
 
-    changed = mod_ret.pop("changed", None)
-    if changed:
-        diff = mod_ret.pop("diff", {})
-        ret["changes"] = diff
-
     failed = mod_ret.pop("failed", False)
+    changed = mod_ret.pop("changed", None)
+    diff = mod_ret.pop("diff", {}) if changed else {}
     if failed:
         ret["comment"] = mod_ret.pop("msg", None)
         ret["result"] = False
+    elif __opts__["test"]:  # noqa: F821
+        if diff:
+            mod_ret["check_mode"] = True
+            mod_ret["diff"] = diff
+            ret["comment"] = json.dumps(mod_ret)
+        else:
+            ret["comment"] = "System already in the correct state."
+        ret["result"] = None
     else:
-        ret["comment"] = json.dumps(mod_ret)
+        if diff:
+            ret["changes"] = {"diff": diff}
+        else:
+            ret["comment"] = "System already in the correct state."
         ret["result"] = True
 
     return ret
